@@ -1,0 +1,25 @@
+# Secrets
+.env
+*.pem
+*.key
+
+# Data directories
+data/
+volumes/
+
+# Backups local
+backups/*.enc
+backups/*.gz
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
