@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "admin:$$2y$$10$$YourHashedPasswordHere"
