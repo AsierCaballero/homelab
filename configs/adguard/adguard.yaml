@@ -1,0 +1,17 @@
+upstream_dns:
+  - https://dns.cloudflare.com/dns-query
+  - https://dns.google/dns-query
+  - tls://1.1.1.1
+bootstrap_dns:
+  - 1.1.1.1
+  - 8.8.8.8
+dns:
+  cache_size: 4194304
+  cache_ttl_min: 600
+  cache_ttl_max: 3600
+  blocking_mode: default
+  ratelimit: 20
+  edns_client_subnet: false
+filtering:
+  enabled: true
+  update_interval: 24
