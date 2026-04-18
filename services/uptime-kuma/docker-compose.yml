@@ -1,0 +1,25 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: unless-stopped
+    networks:
+      - homelab
+    volumes:
+      - uptime-kuma-data:/app/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime.rule=Host(`status.${DOMAIN}`)"
+      - "traefik.http.services.uptime.loadbalancer.server.port=3001"
+    healthcheck:
+      test: ["CMD", "node", "extra/app.js", "--health-check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  uptime-kuma-data:
+
+networks:
+  homelab:
+    external: true
