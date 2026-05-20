@@ -1,0 +1,50 @@
+---
+- name: Deploy HomeLab Services
+  hosts: homelab
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Ensure git is installed
+      apt:
+        name: git
+        state: present
+
+    - name: Clone or update homelab repository
+      git:
+        repo: "https://github.com/youruser/homelab.git"
+        dest: /opt/homelab
+        version: main
+        force: yes
+
+    - name: Copy .env file from template
+      template:
+        src: .env.j2
+        dest: /opt/homelab/.env
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0600"
+
+    - name: Deploy core services
+      community.docker.docker_compose_v2:
+        project_src: /opt/homelab
+        files:
+          - docker-compose.yml
+        state: present
+        pull: always
+      register: output
+
+    - name: Deploy monitoring stack
+      community.docker.docker_compose_v2:
+        project_src: /opt/homelab
+        files:
+          - docker-compose.monitoring.yml
+        state: present
+        pull: always
+
+    - name: Setup backup cron job
+      cron:
+        name: "Homelab daily backup"
+        minute: "0"
+        hour: "2"
+        job: "/opt/homelab/scripts/backup.sh >> /opt/homelab/backups/cron.log 2>&1"

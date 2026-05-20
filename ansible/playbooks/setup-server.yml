@@ -1,0 +1,104 @@
+---
+- name: HomeLab Server Setup
+  hosts: homelab
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Install required system packages
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - ufw
+          - rsync
+          - htop
+          - net-tools
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Install Docker packages
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ansible user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Create project directories
+      file:
+        path: "/opt/{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+      loop:
+        - homelab
+        - homelab/data
+        - homelab/backups
+        - homelab/configs
+
+    - name: Configure UFW firewall
+      ufw:
+        rule: "{{ item.rule }}"
+        port: "{{ item.port }}"
+        proto: "{{ item.proto }}"
+      loop:
+        - { rule: allow, port: "22", proto: tcp }
+        - { rule: allow, port: "80", proto: tcp }
+        - { rule: allow, port: "443", proto: tcp }
+        - { rule: allow, port: "51820", proto: udp }
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+        policy: deny
+        direction: incoming
+
+    - name: Set timezone
+      timezone:
+        name: "{{ timezone }}"
+
+    - name: Configure sysctl for networking
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: yes
+      loop:
+        - { key: net.ipv4.ip_forward, value: "1" }
+        - { key: net.ipv6.conf.all.forwarding, value: "1" }
+        - { key: net.core.rmem_max, value: "2500000" }
+        - { key: net.core.wmem_max, value: "2500000" }
