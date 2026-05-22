@@ -4,26 +4,68 @@ Infrastructure-as-Code para un HomeLab personal con servicios autogestionados, b
 
 ## Stack
 
-- **Orquestación**: Docker Compose + Traefik
-- **Servicios**: Portainer, AdGuard Home, Uptime Kuma
-- **Backups**: Scripts bash automatizados con rotación y cifrado
-- **VPN**: WireGuard
-- **Monitoreo**: Prometheus + Grafana + cAdvisor
-- **Config Management**: Ansible
-- **CI/CD**: GitHub Actions
+| Categoría | Tecnologías |
+|-----------|-------------|
+| Orquestación | Docker Compose + Traefik |
+| Servicios | Portainer, AdGuard Home, Uptime Kuma |
+| Backups | Bash scripts + GPG encryption + rotación |
+| VPN | WireGuard |
+| Monitoreo | Prometheus + Grafana + cAdvisor |
+| Config Mgmt | Ansible |
+| CI/CD | GitHub Actions |
 
-## Requisitos
-
-- Docker Engine >= 24.x
-- Docker Compose >= 2.20
-- Make
-- WireGuard (opcional)
-- Ansible (opcional, para gestión multi-servidor)
-
-## Uso rápido
+## Quick Start
 
 ```bash
-make setup
-make deploy
-make health
+git clone https://github.com/youruser/homelab.git && cd homelab
+make setup       # Configure .env + create directories
+make deploy      # Start all services
+make health      # Verify everything is running
 ```
+
+## Project Structure
+
+```
+📦 homelab
+├── 📂 .github/workflows/   # CI/CD pipeline
+├── 📂 ansible/             # Infrastructure automation
+├── 📂 configs/             # Service configurations
+│   ├── traefik/
+│   ├── prometheus/
+│   ├── grafana/
+│   ├── adguard/
+│   └── wireguard/
+├── 📂 scripts/             # Automation scripts
+│   ├── backup.sh
+│   ├── restore.sh
+│   ├── deploy.sh
+│   ├── health-check.sh
+│   └── setup-vpn.sh
+├── 📂 services/            # Standalone compose files
+│   ├── portainer/
+│   ├── traefik/
+│   └── uptime-kuma/
+├── 📂 docs/                # Documentation
+├── 📂 backups/             # Encrypted backups
+├── docker-compose.yml      # Core services
+├── docker-compose.monitoring.yml
+├── Makefile
+└── .env.example
+```
+
+## Servicios
+
+| Servicio | URL | Puerto expuesto |
+|----------|-----|----------------|
+| Traefik | traefik.{DOMAIN} | 80, 443 |
+| Portainer | portainer.{DOMAIN} | 9000 |
+| AdGuard | adguard.{DOMAIN} | 53 (DNS) |
+| Uptime Kuma | status.{DOMAIN} | 3001 |
+| Grafana | grafana.{DOMAIN} | 3000 |
+| Prometheus | prometheus.{DOMAIN} | 9090 |
+
+## Documentación
+
+- [Setup Guide](docs/setup.md) - Instalación y configuración
+- [Architecture](docs/architecture.md) - Diseño del sistema
+- [Backup Strategy](docs/backup-strategy.md) - Políticas de backup
