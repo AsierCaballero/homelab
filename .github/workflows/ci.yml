@@ -1,0 +1,120 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  DOMAIN: homelab.local
+  CERT_EMAIL: ci@homelab.local
+  TZ: UTC
+
+jobs:
+  validate:
+    name: Validate Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Docker Compose
+        run: |
+          docker compose config
+          docker compose -f docker-compose.monitoring.yml config
+
+      - name: ShellCheck scripts
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: ./scripts
+
+      - name: Validate Ansible syntax
+        run: |
+          ansible-playbook ansible/playbooks/setup-server.yml --syntax-check
+          ansible-playbook ansible/playbooks/deploy-services.yml --syntax-check
+
+  lint:
+    name: Lint Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check YAML formatting
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+
+      - name: Validate Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: "**/*.md"
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "config"
+          hide-progress: false
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    needs: [validate, lint]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Pull images
+        run: |
+          docker compose pull --quiet
+          docker compose -f docker-compose.monitoring.yml pull --quiet
+
+      - name: Start services
+        run: |
+          docker compose up -d
+          docker compose -f docker-compose.monitoring.yml up -d
+
+      - name: Health check
+        run: |
+          sleep 15
+          ./scripts/health-check.sh
+
+      - name: Test backup
+        run: |
+          ./scripts/backup.sh
+          test -n "$(ls -A backups/*.tar.gz 2>/dev/null || true)"
+
+      - name: Cleanup
+        run: docker compose down -v
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build, security]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via Ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "false"
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
+          chmod 600 ssh_key
+          ansible-playbook -i ansible/inventory.yml \
+            --private-key ssh_key \
+            ansible/playbooks/deploy-services.yml
