@@ -1,0 +1,37 @@
+services:
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    restart: unless-stopped
+    networks:
+      - homelab
+    volumes:
+      - ./configs/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki-data:/loki
+    command:
+      - "-config.file=/etc/loki/loki-config.yml"
+    labels:
+      - "traefik.enable=false"
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    container_name: promtail
+    restart: unless-stopped
+    networks:
+      - homelab
+    volumes:
+      - ./configs/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - "-config.file=/etc/promtail/promtail-config.yml"
+    depends_on:
+      - loki
+
+volumes:
+  loki-data:
+
+networks:
+  homelab:
+    external: true
