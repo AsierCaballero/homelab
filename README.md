@@ -10,7 +10,8 @@ Infrastructure-as-Code para un HomeLab personal con servicios autogestionados, b
 | Servicios | Portainer, AdGuard Home, Uptime Kuma |
 | Backups | Bash scripts + GPG encryption + rotación |
 | VPN | WireGuard |
-| Monitoreo | Prometheus + Grafana + cAdvisor |
+| Monitoreo | Prometheus + Grafana + cAdvisor + Node Exporter |
+| Logging | Loki + Promtail |
 | Config Mgmt | Ansible |
 | CI/CD | GitHub Actions |
 
@@ -63,6 +64,7 @@ make health      # Verify everything is running
 | Uptime Kuma | status.{DOMAIN} | 3001 |
 | Grafana | grafana.{DOMAIN} | 3000 |
 | Prometheus | prometheus.{DOMAIN} | 9090 |
+| Loki | — | 3100 (internal) |
 
 ## Documentación
 
