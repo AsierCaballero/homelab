@@ -71,3 +71,4 @@ make health      # Verify everything is running
 - [Setup Guide](docs/setup.md) - Instalación y configuración
 - [Architecture](docs/architecture.md) - Diseño del sistema
 - [Backup Strategy](docs/backup-strategy.md) - Políticas de backup
+- [Logging](docs/logging.md) - Stack de logging (Loki + Promtail)
