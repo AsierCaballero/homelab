@@ -25,7 +25,7 @@ Infrastructure-as-Code for my personal home server -- self-hosted services, auto
 ## Quick start
 
 ```bash
-git clone https://github.com/youruser/homelab.git && cd homelab
+git clone https://github.com/AsierCaballero/homelab.git && cd homelab
 make setup       # copies .env.example, creates required directories
 make deploy      # spins up all core services
 make health      # checks that everything is actually running
