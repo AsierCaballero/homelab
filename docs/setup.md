@@ -31,7 +31,7 @@ make health
 Editar `.env` con los valores adecuados:
 
 | Variable | Descripción | Default |
-|----------|-------------|---------|
+| ---------- | ------------- | --------- |
 | `DOMAIN` | Dominio base del HomeLab | `homelab.local` |
 | `TZ` | Zona horaria | `UTC` |
 | `BACKUP_RETENTION_DAYS` | Días de retención de backups | `30` |
@@ -49,7 +49,7 @@ docker compose -f services/portainer/docker-compose.yml up -d
 ## Comandos
 
 | Comando | Descripción |
-|---------|-------------|
+| --------- | ------------- |
 | `make setup` | Configuración inicial |
 | `make deploy` | Desplegar todos los servicios |
 | `make stop` | Detener servicios |
@@ -78,6 +78,7 @@ docker compose -f services/portainer/docker-compose.yml up -d
 ## Backups
 
 Los backups se ejecutan automáticamente via cron (02:00 AM) e incluyen:
+
 - Volúmenes de todos los contenedores
 - Archivos de configuración
 - Cifrado GPG de datos sensibles

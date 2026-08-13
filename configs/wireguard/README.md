@@ -1,11 +1,12 @@
 # WireGuard VPN
 
 ## Descripción
+
 VPN ligera y rápida para acceso remoto seguro a los servicios del HomeLab.
 
 ## Topología
 
-```
+```text
 [Internet] ──┬── [Servidor Homelab (10.0.0.1)]
              │       ├── Portainer (172.20.0.x:9000)
              │       ├── AdGuard  (172.20.0.3:53)

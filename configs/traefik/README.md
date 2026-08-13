@@ -1,19 +1,25 @@
 # Traefik Reverse Proxy
 
 ## Descripción
-Traefik es un reverse proxy moderno que descubre automáticamente los servicios via Docker y gestiona certificados SSL con Let's Encrypt.
+
+Traefik es un reverse proxy moderno que descubre automáticamente los servicios via Docker y gestiona
+certificados SSL con Let's Encrypt.
 
 ## Configuración
 
 ### traefik.yml
+
 Configuración principal del proxy:
+
 - EntryPoints: web (80) y websecure (443)
 - Redirección automática HTTP → HTTPS
 - Provider Docker para service discovery
 - Resolver Let's Encrypt con HTTP challenge
 
 ### config.yml
+
 Middlewares compartidos:
+
 - **auth**: Basic Auth para dashboards sensibles
 
 ## Uso

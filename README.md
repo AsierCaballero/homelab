@@ -1,16 +1,17 @@
-[![CI](https://img.shields.io/badge/CI-passing-brightgreen)]()
-[![License](https://img.shields.io/badge/license-MIT-blue)]()
-[![Ansible](https://img.shields.io/badge/Ansible-8.x-red)]()
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)]()
-
 # Homelab Automation
 
-Infrastructure-as-Code for my personal home server -- self-hosted services, automated backups, a WireGuard VPN, monitoring dashboards, and CI/CD pipelines orchestrated through GitHub Actions.
+[![CI](https://img.shields.io/badge/CI-passing-brightgreen)](https://github.com/AsierCaballero/homelab/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/AsierCaballero/homelab/blob/main/LICENSE)
+[![Ansible](https://img.shields.io/badge/Ansible-8.x-red)](https://github.com/AsierCaballero/homelab/tree/main/ansible)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)](https://github.com/AsierCaballero/homelab/blob/main/docker-compose.yml)
+
+Infrastructure-as-Code for my personal home server -- self-hosted services, automated backups,
+a WireGuard VPN, monitoring dashboards, and CI/CD pipelines orchestrated through GitHub Actions.
 
 ## What's in the stack
 
 | Category | What I use |
-|----------|-----------|
+| ---------- | ----------- |
 | Orchestration | Docker Compose + Traefik (reverse proxy with automatic TLS) |
 | Management UI | Portainer |
 | DNS/Ad-blocking | AdGuard Home |
@@ -40,7 +41,7 @@ make up-logging      # Loki + Promtail
 
 ## Project layout
 
-```
+```text
 homelab/
 ├── .github/workflows/    # CI/CD pipeline definitions
 ├── ansible/              # automation playbooks for provisioning
@@ -72,7 +73,7 @@ homelab/
 ## Services and endpoints
 
 | Service | URL (internal) | Exposed port(s) |
-|---------|---------------|----------------|
+| --------- | --------------- | ---------------- |
 | Traefik | traefik.{DOMAIN} | 80, 443 |
 | Portainer | portainer.{DOMAIN} | 9000 |
 | AdGuard Home | adguard.{DOMAIN} | 53 (DNS) |
@@ -81,7 +82,8 @@ homelab/
 | Prometheus | prometheus.{DOMAIN} | 9090 |
 | Loki | -- | 3100 (internal only) |
 
-Most of these sit behind Traefik so you only need port 443 open to the outside (plus 51820 for WireGuard). The monitoring ports stay internal unless you explicitly expose them.
+Most of these sit behind Traefik so you only need port 443 open to the outside (plus 51820 for
+WireGuard). The monitoring ports stay internal unless you explicitly expose them.
 
 ## Documentation
 
