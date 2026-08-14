@@ -1,6 +1,7 @@
 # Portainer
 
 ## Descripción
+
 Interfaz web para gestión visual de contenedores Docker, imágenes, volúmenes y redes.
 
 ## Configuración

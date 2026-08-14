@@ -1,6 +1,7 @@
 # Uptime Kuma
 
 ## Descripción
+
 Monitor de uptime para servicios del HomeLab. Notificaciones en tiempo real cuando un servicio falla.
 
 ## Configuración
@@ -11,16 +12,17 @@ Monitor de uptime para servicios del HomeLab. Notificaciones en tiempo real cuan
 ## Monitores recomendados
 
 | Servicio | URL/Tipo | Intervalo |
-|----------|----------|-----------|
-| Traefik | https://traefik.{DOMAIN} | 60s |
-| Portainer | https://portainer.{DOMAIN} | 60s |
-| AdGuard | https://adguard.{DOMAIN} | 60s |
+| ---------- | ---------- | ----------- |
+| Traefik | <https://traefik.{DOMAIN}> | 60s |
+| Portainer | <https://portainer.{DOMAIN}> | 60s |
+| AdGuard | <https://adguard.{DOMAIN}> | 60s |
 | Ping gateway | Ping 172.20.0.1 | 30s |
 | DNS | DNS lookup | 30s |
 
 ## Notificaciones
 
 Soportados:
+
 - Telegram
 - Discord
 - Email (SMTP)

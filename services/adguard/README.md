@@ -1,6 +1,7 @@
 # AdGuard Home
 
 ## Descripción
+
 Servidor DNS con bloqueo de anuncios y rastreadores a nivel de red. Protege todos los dispositivos del HomeLab.
 
 ## Configuración
@@ -19,9 +20,9 @@ Servidor DNS con bloqueo de anuncios y rastreadores a nivel de red. Protege todo
 
 | Lista | URL |
 |-------|-----|
-| StevenBlack | https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts |
-| OISD Full | https://big.oisd.nl/ |
-| AdGuard DNS | https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt |
+| StevenBlack | <https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts> |
+| OISD Full | <https://big.oisd.nl/> |
+| AdGuard DNS | <https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt> |
 
 ## Rendimiento
 

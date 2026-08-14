@@ -1,12 +1,13 @@
 # Backup Strategy
 
 ## Objetivo
+
 Garantizar la recuperabilidad de todos los datos del HomeLab ante fallos del sistema.
 
 ## Frecuencia
 
 | Tipo | Frecuencia | Retención | Destino |
-|------|-----------|-----------|---------|
+| ------ | ----------- | ----------- | --------- |
 | Volúmenes Docker | Diaria (02:00) | 30 días | Local |
 | Configuraciones | Diaria (02:30) | 30 días | Local + Git |
 | Base de datos | Semanal (domingo) | 90 días | Local |
