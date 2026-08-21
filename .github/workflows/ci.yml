@@ -33,7 +33,9 @@ jobs:
           shellcheck -S error scripts/*.sh
 
       - name: Install Ansible
-        run: pip install "ansible-core>=2.15,<2.18"
+        run: |
+          pip install "ansible-core>=2.15,<2.18"
+          ansible-galaxy collection install community.general
 
       - name: Validate Ansible syntax
         run: |
@@ -58,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Trivy config scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           scan-type: config
           hide-progress: true
