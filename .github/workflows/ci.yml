@@ -74,9 +74,14 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     needs: [validate, lint]
+    env:
+      # GitHub-hosted runners already bind :53 (systemd-resolved)
+      ADGUARD_PORT: "5353"
     steps:
       - uses: actions/checkout@v4
-      - run: cp .env.example .env
+      - run: |
+          cp .env.example .env
+          echo "ADGUARD_PORT=${ADGUARD_PORT}" >> .env
       - name: Pull images
         run: |
           docker compose pull --quiet
