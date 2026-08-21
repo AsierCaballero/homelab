@@ -27,9 +27,10 @@ jobs:
           docker compose -f docker-compose.logging.yml config
 
       - name: ShellCheck scripts
-        uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          scandir: ./scripts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq shellcheck
+          shellcheck -S error scripts/*.sh
 
       - name: Install Ansible
         run: pip install "ansible-core>=2.15,<2.18"
@@ -44,14 +45,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Check YAML formatting
-        uses: ibiqlik/action-yamllint@v3
+      - uses: ibiqlik/action-yamllint@v3
         with:
           config_file: .yamllint.yml
-
-      - name: Validate Markdown
-        uses: DavidAnson/markdownlint-cli2-action@v16
+      - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: "**/*.md"
 
@@ -60,14 +57,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Trivy config scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.24.0
         with:
-          scan-type: "config"
+          scan-type: config
           hide-progress: true
           exit-code: "0"
-          severity: "CRITICAL,HIGH"
+          severity: CRITICAL,HIGH
 
   build:
     name: Build & Test
@@ -75,29 +71,23 @@ jobs:
     needs: [validate, lint]
     steps:
       - uses: actions/checkout@v4
-      - name: Copy .env
-        run: cp .env.example .env
-
+      - run: cp .env.example .env
       - name: Pull images
         run: |
           docker compose pull --quiet
           docker compose -f docker-compose.monitoring.yml pull --quiet
-
       - name: Start services
         run: |
           docker compose up -d
           docker compose -f docker-compose.monitoring.yml up -d
-
       - name: Health check
         run: |
           sleep 20
           ./scripts/health-check.sh
-
       - name: Test backup
         run: |
           ./scripts/backup.sh
           test -n "$(ls -A backups/*.tar.gz 2>/dev/null || true)"
-
       - name: Cleanup
         if: always()
         run: docker compose down -v || true
