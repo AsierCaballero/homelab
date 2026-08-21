@@ -1,12 +1,21 @@
 # Homelab Automation
 
-[![CI](https://img.shields.io/badge/CI-passing-brightgreen)](https://github.com/AsierCaballero/homelab/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/AsierCaballero/homelab/ci.yml?label=CI&logo=github)](https://github.com/AsierCaballero/homelab/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/AsierCaballero/homelab/blob/main/LICENSE)
 [![Ansible](https://img.shields.io/badge/Ansible-8.x-red)](https://github.com/AsierCaballero/homelab/tree/main/ansible)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)](https://github.com/AsierCaballero/homelab/blob/main/docker-compose.yml)
 
-Infrastructure-as-Code for my personal home server -- self-hosted services, automated backups,
-a WireGuard VPN, monitoring dashboards, and CI/CD pipelines orchestrated through GitHub Actions.
+Infrastructure-as-Code for a production-minded home lab: reverse proxy with TLS, VPN, encrypted
+backups, monitoring/logging, and CI that validates compose + Ansible on every push.
+
+## Who this is for
+
+Teams evaluating whether I **operate** infra — not only design it. Patterns transfer to SMB /
+consultancy hardening (Traefik, WireGuard, Prometheus/Grafana/Loki, backup rotation).
+
+**Limitations:** personal lab topology; secrets and public DNS are yours to wire. Not a turnkey SaaS.
+
+**Engagements:** [Calendly](https://calendly.com/asier-caballero) · [Profile](https://github.com/AsierCaballero)
 
 ## What's in the stack
 
