@@ -88,7 +88,7 @@ jobs:
           docker compose -f docker-compose.monitoring.yml pull --quiet
       - name: Start services
         run: |
-          docker compose up -d
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d
           docker compose -f docker-compose.monitoring.yml up -d
       - name: Health check
         run: |
