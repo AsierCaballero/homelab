@@ -67,6 +67,7 @@ services:
 
 networks:
   homelab:
+    name: homelab
     driver: bridge
     ipam:
       config:
