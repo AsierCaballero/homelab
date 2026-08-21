@@ -88,7 +88,8 @@ jobs:
           docker compose -f docker-compose.monitoring.yml pull --quiet
       - name: Start services
         run: |
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          # Skip AdGuard in CI: static DNS IP / host port binding is lab-specific
+          docker compose up -d traefik portainer uptime-kuma
           docker compose -f docker-compose.monitoring.yml up -d
       - name: Health check
         run: |

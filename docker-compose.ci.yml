@@ -1,6 +1,0 @@
-# CI-only overrides for GitHub-hosted runners.
-# - Avoid privileged/fixed DNS (host :53 / static IP conflicts)
-services:
-  adguard:
-    networks:
-      - homelab

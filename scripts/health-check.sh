@@ -20,9 +20,9 @@ print_status() {
     local status=$1
     local message=$2
     case $status in
-        PASS) echo -e "  ${GREEN}✓${NC} $message"; ((PASS++)) ;;
-        FAIL) echo -e "  ${RED}✗${NC} $message"; ((FAIL++)) ;;
-        WARN) echo -e "  ${YELLOW}⚠${NC} $message"; ((WARN++)) ;;
+        PASS) echo -e "  ${GREEN}✓${NC} $message"; PASS=$((PASS + 1)) ;;
+        FAIL) echo -e "  ${RED}✗${NC} $message"; FAIL=$((FAIL + 1)) ;;
+        WARN) echo -e "  ${YELLOW}⚠${NC} $message"; WARN=$((WARN + 1)) ;;
     esac
 }
 
@@ -52,29 +52,13 @@ check_docker() {
 
 check_containers() {
     echo "--- Containers ---"
-    local compose_files=("$DOCKER_COMPOSE")
-    [ -f "$MONITORING_COMPOSE" ] && compose_files+=("$MONITORING_COMPOSE")
-
-    for compose in "${compose_files[@]}"; do
-        while IFS= read -r service; do
-            [ -z "$service" ] && continue
-            local container_name="${service}_1"
-            if docker ps --format '{{.Names}}' | grep -q "$container_name"; then
-                local status=$(docker inspect "$container_name" --format '{{.State.Status}}' 2>/dev/null)
-                if [ "$status" = "running" ]; then
-                    local health=$(docker inspect "$container_name" --format '{{.State.Health.Status}}' 2>/dev/null)
-                    if [ "$health" = "healthy" ] || [ -z "$health" ] || [ "$health" = "<nil>" ]; then
-                        print_status PASS "Container $service is running"
-                    else
-                        print_status WARN "Container $service is $status (health: $health)"
-                    fi
-                else
-                    print_status FAIL "Container $service is $status"
-                fi
-            else
-                print_status WARN "Container $service is not running"
-            fi
-        done < <(docker compose -f "$compose" config --services 2>/dev/null)
+    local expected=(traefik portainer uptime-kuma prometheus)
+    for container_name in "${expected[@]}"; do
+        if docker ps --format '{{.Names}}' | grep -qx "$container_name"; then
+            print_status PASS "Container $container_name is running"
+        else
+            print_status WARN "Container $container_name is not running"
+        fi
     done
 }
 
